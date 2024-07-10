@@ -1,0 +1,297 @@
+\documentclass[10pt,onecolumn,letterpaper]{article}
+%---------------------Paquetes-----------------------------
+%Paquete para columnas, falta adiccionar esto y añadir el ejemplo al texto, incluir ejemplo de dos columnas.
+\usepackage[spanish]{babel}
+\usepackage[latin1,utf8]{inputenc}
+\usepackage{amssymb,amsmath} %Lenguaje matemático %amsmath, el de las integrales
+\usepackage{verbatim} %Escribir código
+\usepackage{bm}
+\usepackage{graphics,graphicx,xcolor}
+%% Sets page size and margins
+\usepackage[a4paper,top=2cm,bottom=2cm,left=2cm,right=2cm,marginparwidth=1.75cm]{geometry}
+%Fecha en español. Nota: \renewcommand. También paquete para email.
+\usepackage{multirow}
+\usepackage{multicol}
+%---------------------------------------------------------------------
+\title{Respuestas ejercicios propuestos para LaTex}
+\author{CARLOS ANDRES RODALLEGA MILLAN}
+\date{\today}
+%++++++++++++++++++++++CUERPO DEL DOCUMENTO+++++++++++++++++++++++++++
+\begin{document}
+\maketitle 
+%.-.-.-.-.
+\section{Primer punto} 
+Utilice los entornos \verb+\array+ o \verb+\pmatrix+ para recrear la siguiente matrix:
+\begin{equation}
+\begin{pmatrix}\nonumber
+	F[1,1] & \cdots & F[1,m]\\
+	\vdots & \ddots & \vdots\\
+	F[n,1] & \cdots & F[n,m]
+\end{pmatrix}
+\end{equation}
+Tenga en cuenta que para los puntos puesto en anterior matrix los código dados fueron los siguientes:
+\begin{verbatim}
+\cdots   Horizontales (centados)
+\ldots	 Horizontales (al piso)
+\vdots	 Verticales
+\ddots	 Diagonales
+\end{verbatim}
+\section{Segundo Punto} 
+Recrear exactamente el extracto dado. \\
+\begin{center}
+\textbf{Ejercicios sobre coordenadas cilíndricas}
+\end{center}
+La ecuación del cardiole está dada por $r=k(1+cos\theta)$ por lo tanto:
+\begin{eqnarray*}
+\dot{r}=-k\ddot{\theta}sen(\theta) \\
+\ddot{r}= -k(\dot{\theta ^{2}} cos\theta + \ddot{\theta}sen\theta)
+\end{eqnarray*}
+En  coordenadas polares la velocidad de la partícula está dada por la expresión:
+\begin{equation*}
+\vec{v}=\dot{r}\hat{r}+r\dot{\theta} \hat{\theta}
+\end{equation*}
+Como la rapidez es constante entonces
+\begin{eqnarray*}
+V_0^{2}=\dot{r}^{2}+r^{2}\dot{\theta}^{2}=2k^{2}\dot{\theta^{2}}(1+cos\theta) \\
+\Longrightarrow \fbox{$\dot{\theta} = \frac{V_0}{\sqrt{2k^{2}(1+cos\theta)}}=\frac{V_0}{\sqrt{2kr}}$}
+\end{eqnarray*}
+Para calcular la aceleración radial $a_r=\ddot{r}-r\ddot{\theta^{2}}$ necesitamos calcular $\ddot{\theta}$
+\begin{equation*}
+\dot{\theta}=\frac{V_0}{\sqrt{2kr}}\Longrightarrow \ddot{\theta}=-\frac{V_0\dot{r}}{2r\sqrt{2kr}}= \frac{ksen\theta}{2r}\dot{\theta^{2}}=\frac{V_0^{2}sen\theta}{4r^{2}}
+\end{equation*}
+Luego
+\begin{gather*}
+a_r=\ddot{r}-r\dot{\theta^{2}}=-kcos\theta\dot{\theta^{2}}- ksen\theta\ddot{\theta}-r\dot{\theta^{2}}\\
+\Longrightarrow a_r=-k\dot{\theta^{2}}[cos\theta +\frac{sin^{2}\theta}{2(1+cos\theta)}+(1+cos\theta)]\\
+a_r=-k\dot{\theta^{2}}[\frac{2cos\theta+2cos^{2}\theta+ sen^{2}\theta +2+4cos\theta+2cos^{2}\theta}{2(1+cos\theta)}]\\
+a_r=\frac{-k\dot{\theta}^{2}}{2(1+cos\theta)}(4cos^{2}\theta + sen^{2}\theta +6cos\theta + 2)=\frac{-3k\dot{\theta^{2}}}{2(1+cos\theta)}(1+cos\theta)^{2}\\ 
+\\
+\fbox{$a_r=-\frac{3}{4}\frac{V_0^{2}}{k}$}
+\end{gather*}
+\section{Tercer Punto}
+Reproduzca el siguiente extracto de documento usando LaTex.
+\\
+\begin{center}
+\textbf{Let $\theta,\beta$ be $3x3$ skew-symmetric matrices and $\sigma$ be a $3x3$ matrix. Find symmetric $S,T$ such that:}
+\end{center}
+$$(S-\theta)(T-\beta)=\sigma$$
+After all previous consideratios, to find one solution we assume that T is diagonal.\newline
+\\
+Denote R= $\begin{pmatrix}\nonumber
+	0 & c & b\\
+	-c & 0 & a\\
+	-b & -a & 0
+\end{pmatrix}$, A=$\begin{pmatrix}\nonumber
+	m_1 & m_2 & m_3\\
+	m_4 & m_5 & m_6\\
+	m_7 & m_8 & m_)
+\end{pmatrix}$, Q=$\begin{pmatrix}\nonumber
+	0 & q_1 & q_2\\
+	-q_1 & 0 & q_3\\
+	-q_2 & -q_3 & 0
+\end{pmatrix}$, T=$\begin{pmatrix}\nonumber
+	x & 0 & 0\\
+	0 & y & 0\\
+	0 & 0 & z
+\end{pmatrix}$.\newline
+\\
+\\
+\\
+\\
+Then we have TRT=$\begin{pmatrix}\nonumber
+	0 & c & b\\
+	-c & 0 & a\\
+	-b & -a & 0
+\end{pmatrix}$, $A^{\dagger}T=\begin{pmatrix}\nonumber
+	0 & c & b\\
+	-c & 0 & a\\
+	-b & -a & 0
+\end{pmatrix}$ 
+\\
+\\
+Then we have the explicit form of the equation:
+\begin{equation}\label{eq1}
+cxy+m_4y-m_2x=q_1\\
+\end{equation}
+
+\begin{equation}\label{eq2}
+bxz+m_7z-m_3x=q_2\\
+\end{equation}
+
+\begin{equation}\label{eq3}
+ayz+m_8z-m_6y=q_3\\
+\end{equation}
+\\
+This system of equations is solved by eliminate z (by (\ref{eq2}) and (\ref{eq3})) then calculate y from x (by the identity of
+xy). Then we are left with a quadratic equation of x.\newline
+Have x we can solve y, z.\newline
+The explicit solution is obtainable but not worth calculated by hand.
+\newpage
+\section{Punto 4}
+Here are the formulas for counting in various ways:
+\begin{table}[h!]
+\begin{center}
+\begin{tabular}{|l||c|c|}
+    \hline
+     &No Repetiton&Repetition Allowed \\ \hline \hline
+    \multirow{3}{*}{Not sensitive to order}& & \\
+    &$\left(\begin{array}{c}
+     n\\
+     r
+\end{array}\right)$&$\left(\left(\begin{array}{c}
+     n\\
+     r
+\end{array}\right)\right)=\left(\begin{array}{c}
+     n+r-1\\
+     r
+\end{array}\right)$\\
+    & & \\\hline
+        \multirow{3}{*}{Sensitive to order}& & \\
+    &$P(n,r)$&$n^{r}$\\
+    & & \\
+    \hline
+\end{tabular}\caption{Primera tabla de la tarea :D}
+\end{center}
+\label{tab:multicol}
+\end{table}\\
+
+Here are examples to demonstrate:
+\\
+\begin{table}[h!]
+\begin{center}
+\begin{tabular}{|l||c|c|}
+    \hline
+     &No Repetiton&Repetition Allowed \\ \hline \hline
+    \multirow{5}{*}{Not sensitive to order}& & \\
+    &5 distinct books &unlimited copies of 5 books\\
+    &choose 3 books to take home &choose 3 copies to take home\\
+    & & \\
+    & $\left(\begin{array}{c}
+     5\\
+     3
+\end{array}\right)$& $\left(\left(\begin{array}{c}
+     5\\
+     3
+\end{array}\right)\right)=\left(\begin{array}{c}
+     5+3-1\\
+     3
+\end{array}\right)$ \\\hline
+        \multirow{5}{*}{Sensitive to order}& & \\
+    &5 distinct books &unlimited copies of 5 books\\
+    &give one to person A, B, and C &give one to person A, B, and C\\
+    & & \\
+    &$P(5,3)$ &$5^3$ \\
+    \hline
+\end{tabular}\caption{Segunda tabla de la tarea :D}
+\end{center}
+\label{Segunda tablal}
+\end{table}\\
+\begin{table}[h!]
+\begin{center}
+\begin{tabular}{|l||c|c|}
+    \hline
+     &No Repetiton&Repetition Allowed \\ \hline \hline
+    \multirow{5}{*}{Not sensitive to order}& & \\
+    &5 distinct books &unlimited copies of 5 books\\
+    &choose 3 books to take home &choose 3 copies to take home\\
+    & & \\
+    & $\big(\begin{smallmatrix}
+  5\\
+  3 
+\end{smallmatrix}\big)$ &$\big((\begin{smallmatrix}
+  5\\
+  3 
+\end{smallmatrix}\big))=\big(\begin{smallmatrix}
+  5+3-1\\
+  3 
+\end{smallmatrix}\big)$\\\hline
+        \multirow{5}{*}{Sensitive to order}& & \\
+    &5 distinct books &unlimited copies of 5 books\\
+    &give one to person A, B, and C &give one to person A, B, and C\\
+    & & \\
+    &$P(5,3)$ &$5^3$ \\
+    \hline
+\end{tabular}\caption{Segunda tabla de la tarea :D}
+\end{center}
+\label{Segunda2 tablal}
+\end{table}
+\newpage
+And here are some more formulas:\\
+\\
+$$\begin{pmatrix}
+  n\\ 
+  r 
+\end{pmatrix}=\frac{n!}{(n-r)!r!}$$\newline
+\\
+$$\begin{pmatrix}
+  n\\ 
+  r 
+\end{pmatrix}=\begin{pmatrix}
+  n\\ 
+  n-r 
+\end{pmatrix}$$\newline
+\\
+$$\begin{pmatrix}
+  n\\ 
+  r 
+\end{pmatrix}=\begin{pmatrix}
+  n-1\\ 
+  r-1 
+\end{pmatrix}+\begin{pmatrix}
+  n-1\\ 
+  r 
+\end{pmatrix}$$
+Fin
+\newpage
+\section{Punto Tarea Revelo}
+Reproduzca el documento a continuación.
+
+\begin{center}
+\textbf{Exercise 1: Sum rule for the Energy}
+\end{center}
+\begin{itemize}
+\item Show that the expectation value of the total kinetic energy in the ground state of a many-body fermion system is given by
+\begin{equation}
+\langle T \rangle =-i\int d \vec{x} \lim_{\vec{x^{\prime}}\to\ \vec{x}} (-\frac{\hbar^{2}\nabla^{2}}{2m})\hspace{0.2cm} Tr[G(\vec{x},t;\vec{x^{\prime}},t^{+})]
+\end{equation}
+where we consider the trapping potential $U(\vec{x})=0$, and $\hat{T}=-\frac{\hbar^{2}\nabla^{2}}{2m}$.
+\item Show that the total ground state energy is given by
+\begin{eqnarray}
+E=& \langle \hat{H} \rangle \nonumber \\
+ =& \langle \hat{T} + \hat{V} \rangle \nonumber \\
+ =& \langle \hat{T} \rangle + \langle \hat{V}  \nonumber \\
+ =& -\frac{i}{2} \int d \vec{x} \lim_{\vec{x^{\prime}}\to\ \vec{x}} (i\hbar\frac{\partial}{\partial t}-\frac{\hbar^{2}\nabla^{2}}{2m})\hspace{0.2cm} Tr[G(\vec{x},t;\vec{x^{\prime}},t^{+})] 
+\end{eqnarray}
+\end{itemize}
+\textit{Hint:} To evaluate the mean value of potential energy
+\begin{equation}
+\langle \hat{V} \rangle =\frac{\langle \psi_0 |\frac{1}{2} \int d \vec{x}
+\int d \vec{x^{\prime}}\hat{\psi}_\beta^{\dagger}
+(\vec{x}) \hat{\psi}_{\alpha}^{\dagger}(\vec{x^{\prime}}) V
+(|\vec{x}-\vec{x^{\prime}}|)  \hat{\psi_\alpha }
+(\vec{x^{\prime}}) \psi_\beta (\vec{x})|\psi_0\rangle}
+{\langle\psi_0|\psi_0\rangle}
+\end{equation}
+use the result obtained in exercise 2, set 9:
+\begin{equation}
+\left[i\hbar\frac{\partial}{\partial t}+\frac{\hbar^{2}\nabla^{2}}{2m}\right]\hat{\psi}_{H\alpha} (\vec{x},t)=\int d\vec{x^{\prime}} \hat{\psi}_{H\beta}^{\dagger} (\vec{x}^{\prime},t)V(|\vec{x}-\vec{x}^{\prime}|\hat{\psi}_{H\beta}(\vec{x}^{\prime},t)\hat{\psi}_{H\alpha}(\vec{x},t)
+\end{equation}
+\section{Punto 5}
+\begin{center}
+{\small \textbf{DRIVLE’S THEOREM AND THE R-O LEMMA}}
+\end{center}
+In this Section we will state and prove our main result. The fundamental equation of wet fish-pricing is that of
+Whackabath \cite{ref1}:
+\begin{equation}\label{eqn1}
+f_{xxx}+3f_{xx}-2\cdot Ker(f)=0,
+\end{equation}
+where Whackabath’s equation (\ref{eqn1}) is hardly ever used.\\
+It is an interesting question whether the Whackabath’s equation (\ref{eqn1}) in standard topology can be applied without
+change in Gackworth’s $\Omega$-topologies. A very full discussion of Gackworth’s work was given in \cite{ref1,ref2}.\\
+$\cdots \cdots$
+\renewcommand{\refname}{\centering \rule[0 mm]{30 mm} {0.1 mm}}
+\begin{thebibliography}{99} %Bibliografia, información que tenemos en nuestras referencias %bibitem
+\bibitem{ref1} T. I. Strainer \verb+&+ B. J. M. Wilkins 1993, A new result on Drivle’s Theorem, Proc. Iceland Cod Fish Soc. Lond. Ser. D, 134 (8678–8679).
+\bibitem{ref2} B. J. M. Wilkins, “Topological Dynamics and the Haddock Fishery”, Unpublished, 1987.
+\end{thebibliography}
+\end{document}

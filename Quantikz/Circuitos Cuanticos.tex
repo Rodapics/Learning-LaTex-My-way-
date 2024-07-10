@@ -1,0 +1,43 @@
+\documentclass[12pt, twocolums, letterpaper]{article}
+\usepackage[lmargin=0.5cm,rmargin=1cm,top=0.5cm,bottom=0.5cm]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish]{babel}
+%\parident=0cm
+%%
+\usepackage{tikz}
+%%
+\usepackage{quantikz}
+
+\begin{document}
+\twocolumn[]
+En este documento haremos un resumen de las figuras de simuladores que podemos generar en Quantikz
+
+\section{Usos Básicos}
+Generaremos las lineas por las cuales los circuitos se conectan, estas lineas se denominan \textbf{Cables Cuánticos}:\\ \\
+\begin{quantikz}
+&&&&&
+\end{quantikz}\\ 
+El código usado para realiar esto es:
+
+
+\begin{verbatim}
+	\begin{quantikz}
+	&&&&&
+	\end{quantikz}
+\end{verbatim}
+Si necesitamos crear dos lineas de cables cuánticos, lo podemos realizar con el mismo código: \\ \\
+\begin{quantikz}
+&&&& \\
+&&&&
+\end{quantikz}\\ \\
+Código usado:
+\begin{verbatim}
+	\begin{quantikz}
+	&&&&& \\
+	&&&&
+	\end{quantikz}
+\end{verbatim}
+De la misma manera, si queremos generar un cable cuántico con diferente diseño, lo podemos especificar, como se muestra a continuación:
+
+\end{document}

@@ -1,0 +1,34 @@
+%Comandos de ajustes iniciales para un documento LaTex
+\documentclass{article}
+%Valor de las margenes y esas cosas
+\textheight=21cm
+\textwidth=18cm
+\topmargin=-1cm
+%Margen izquierda
+\oddsidemargin =-1cm
+%Coloca la numeración de página en la parte superior
+\pagestyle{myheadings}
+%Paquetes, no se para que son ._. Pes aquí copi algo \usepackage{amsmath,amssymb,amsfonts,latexsym}: Esta instrucción indica que en este documento se usarán paquetes de símbolos adicionales (símbolos de la AMS)
+\usepackage{amsmath,amssymb,amsfonts,latexsym}
+%Esta instrucción se usa para incluir un paquete que nos permite usar los acentos y otros símbolos, directamente del teclado para que LATEX reconozca los acentos que usamos en español directamente del teclado(como ú envez de \'u) y para que genere una salida adecuada para un PDF, colocamos en el preámbulo:
+\usepackage[latin1]{inputenc}
+%Para que procese graficas
+\usepackage{graphicx}
+%Para cambiar a idioma español las cosas como capitulos y cosas asi. Usar el paquete babel
+\usepackage[spanish]{babel}
+%Inicia el documento
+\begin{document}
+\begin{center}
+\textbf{APRENDIENDO LATEX}
+\end{center}
+\begin{flushleft}
+\part{Motivacion}
+Para cualquier persona que siempre ha utilizado editores de textos directos o los que llaman en inglés Obtienes lo que ves usar LaTex es estremadamente frustante, pues, no ves en tiempo real como esta quedando tu documento, no sabes si lo que haces esta bien o si quedará feo, solo vez un interfaz en la cual pareciera que estuvieras codificando archivos de la Nasa y no haciendo tu tarea. Es interesante que mientras escribo esto me doy cuenta de todas la complicaciones que una persona como yo puede tener al apenas empezar usar programas como este, al darle una mirada a como iba quedando este escrito, me he dado cuenta que Latex a tenido inconvenientes al tratar de procesar las tíldes, a pesar de que al inicio puse unos paquenes para evitar conflictos como este, tratare de arreglarlo lo mas pronto posible. 
+\\
+No se como ha llegado este texto, solo soy un estudiante de segundo semestre tratando de aprender a manejar este editor, la mejor manera que se me ha ocurrido para aprenderlo es escribir lo que voy aprendiendo de libros en ingl\'e s, hablare en un lenguaje informal siendo formal cuando se debe ser. Esta quizas puede ser una guía para que tu aprendas tambien de la misma forma que yo hice, e incluso te recomendare que hacer y que no hacer, para que el aprendizaje sea aun mejor. No dedicaré mucho tiempo a este proyecto, solo lo suficiente para ser fluido en este programita y poder hacer mis informes y trabajos de la manera mas profesional. Asi nadie lo lea, creo que esta es la mejor manera para irme entrenando como escritor, pues cuando sea un fisico viejito y no sirva mas para los calculos podre dedicar todo el tiempo a escribir
+\part{Lo primero}
+Para esta vaina tenemos que olvidarnos de todo lo que habiamos tratado antes, 
+\end{flushleft}
+
+
+\end{document}
