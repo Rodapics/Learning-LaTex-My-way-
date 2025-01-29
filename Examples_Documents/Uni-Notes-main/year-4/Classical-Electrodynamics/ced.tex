@@ -1,0 +1,1040 @@
+% !TeX program = lualatex
+\documentclass[fleqn]{NotesClass}
+
+\strictpagecheck
+
+%% Packages
+\usepackage{siunitx}
+\usepackage{tensor}
+\usepackage{csquotes}
+\usepackage[thicklines]{cancel}
+
+% Tikz stuff
+\usepackage{tikz}
+\tikzset{>=latex}
+% £xternal
+\usetikzlibrary{external}
+\tikzexternalize[prefix=tikz-external/]
+% Other libraries
+\usetikzlibrary{calc}
+\usetikzlibrary{angles}
+\usetikzlibrary{quotes}
+
+% References, should be last things loaded
+\usepackage[pdfauthor={Willoughby Seago},pdftitle={Classical Electrodynamics},pdfkeywords={Classical Electrodynamics, Special Relativity, Electromagnetism, Electrodynamics},pdfsubject={Classical Electrodynamics}]{hyperref}  % Should be loaded second last (cleveref last)
+\colorlet{hyperrefcolor}{blue!60!black}
+\hypersetup{colorlinks=true, linkcolor=hyperrefcolor, urlcolor=hyperrefcolor}
+\usepackage[
+capitalize,
+nameinlink,
+noabbrev
+]{cleveref} % Should be loaded last
+
+% My packages
+\usepackage{NotesBoxes}
+\usepackage{NotesMaths}
+
+\setmathfont[range={\int, \oint}]{Latin Modern Math}
+
+% Highlight colour
+\definecolor{highlight}{HTML}{2C75FF}
+\definecolor{my orange}{HTML}{FF702E}
+\definecolor{my pink}{HTML}{FF2EE0}
+\definecolor{my green}{HTML}{77FF2E}
+\definecolor{my purple}{HTML}{702EFF}
+\definecolor{my light blue}{HTML}{2EFFFC}
+
+\definecolor{positive red}{HTML}{cc0000}
+\definecolor{negative blue}{HTML}{0000cc}
+
+% Title page info
+\title{Classical Electrodynamics}
+\author{Willoughby Seago}
+\date{May 18, 2022}
+% \subtitle{}
+% \subsubtitle{}
+
+% Commands
+
+% Maths
+\newcommand*{\SIpic}{\tikzexternaldisable\tikz[baseline=(a.base)]{\node[draw=highlight, fill=highlight!30, thick, text=highlight] (a) {SI}}\tikzexternalenable}
+\newcommand*{\SIunits}{\tag*{\SIpic\hspace{1em}(\refstepcounter{equation}\theequation)}}
+\newcommand*{\gaussianpic}{\tikzexternaldisable\tikz[baseline=(a.base)]{\node[draw=highlight, fill=highlight!30, thick, text=highlight] (a) {Gaussian}}\tikzexternalenable}
+\newcommand*{\gaussian}{\tag*{\gaussianpic\hspace{1em}(\refstepcounter{equation}\theequation)}}
+\newcommand*{\dimension}[1]{\symsf{#1}}
+\newcommand*{\ident}{\mathbb{1}}
+\newcommand*{\trans}{\top}
+\newcommand*{\dalembertian}{\partial^2}
+\newcommand*{\lagrangian}{L}
+\newcommand*{\lagrangianDensity}{\symcal{L}}
+\newcommand*{\order}{\symcal{O}}
+\newcommand*{\classicalElectronRadius}{\ell_{\symrm{c}}}
+\newcommand*{\e}{\symrm{e}}
+\newcommand*{\ret}{{\text{ret}}}
+\newcommand*{\rad}{\text{rad}}
+
+\includeonly{parts/fundamentalsAndReview, parts/relativisticElectrodynamics, parts/actions, parts/greensFunctions}
+
+\begin{document}
+    \frontmatter
+    \titlepage
+    \innertitlepage{}
+    \tableofcontents
+    \listoffigures
+    \mainmatter
+    
+    \include{parts/fundamentalsAndReview}
+    \include{parts/relativisticElectrodynamics}
+    \include{parts/actions}
+    \include{parts/greensFunctions}
+    
+    \part{Radiation}
+    \chapter{Radiation: The Potential}
+    \section{Setup}
+    We start by considering a point particle with charge \(e\) moving along some known trajectory, \(r^\mu(\tau)\).
+    We want to know what the resulting electromagnetic field is.
+    For the case of a stationary particle we expect to just get the Coulomb field.
+    
+    If the particle has four velocity \(u^\mu(\tau) = \diff{r^\mu}/{\tau}\) then the current density at a position \(x\) is
+    \begin{equation}
+        J^\mu(x) = ec \int \dl{\tau} \, u^\mu(x) \delta^4(x - r(\tau)).
+    \end{equation}
+    We choose to work in the Lorenz gauge, and will do so for the rest of the course.
+    In this gauge the Maxwell equations reduce to a wave equation for the potential:
+    \begin{equation}
+        \dalembertian A^\mu(x) = \frac{1}{c}J^\mu(x) = e\int \dl{\tau} \, u^\mu(\tau) \delta^4(x - r(\tau)).
+    \end{equation}
+    We have seen that this can be solved by a retarded Green's function,
+    \begin{equation}
+        G_{\symrm{R}}(x) = \frac{1}{2\pi} \theta(x^0) \delta(x\cdot x).
+    \end{equation}
+    The solution is then
+    \begin{align}
+        A^\mu(x) &= \int \dl{^4x'} \, G_{\symrm{R}}(x - x') \frac{1}{c}J^\mu(x')\\
+        &= \int \dl{^4x'} \frac{1}{2\pi} \theta(x^0 - x'^0) \delta((x - x')^2) e \int \! \dl{\tau} \, u^\mu(\tau) \delta^4(x' - r(\tau)).
+    \end{align}
+    
+    \section{Doing the Integrals}
+    \epigraph{There are 5 integrals to do. This seems bad, integrals are hard.\\ I can do integrals with delta functions. Usually.\\ If there aren't delta functions I type it into Mathematica.}{Donal O'Connell}
+    \epigraph{It's good for you to see me screw up.}{Donal O'Connell}
+    
+    To evaluate the potential there are five integrals to do.
+    Fortunately, there are also five Dirac deltas.
+    We can swap the order of the integrals and evaluate the integrals over \(x'\) first, setting \(x' = r(\tau)\) everywhere:
+    \begin{equation}
+        A^\mu = \frac{e}{2\pi} \int \dl{\tau} \, \theta(x^0 - r^0(\tau)) \delta((x - r(\tau))^2) u^\mu(\tau).
+    \end{equation}
+    
+    To do the next integral we have a Dirac delta evaluated at some function of \(\tau\), so we use \cref{eqn:delta(f(x))}.
+    In order to do this we need to find the zeros of \((x - r(\tau))^2\).
+    We don't know details about \(r(\tau)\) so the best we can do is to define \(\tau_*\) such that
+    \begin{itemize}
+        \item \((x - r(\tau_*))^2 = 0\),
+        \item \(x^0 - r^0(\tau_*) > 0\).
+    \end{itemize}
+    The first condition just says that \(\tau_*\) is a zero of \(f(\tau) = (x - r(\tau))^2\).
+    The second condition follows from the \(\theta(x^0 - r^0(\tau))\) term, which means the integrand vanishes when \(x^0 - r^0(\tau) < 0\), so we are free to only consider values making this quantity positive.
+    
+    Expanding the first condition we have
+    \begin{equation}
+        0 = (x - r(\tau_*))^2 = (x^0 - r^0(\tau_*))^2 - \abs{\vv{x} - \vv{r}(\tau_*)}.
+    \end{equation}
+    Taking the positive square root, since \(x^0 - r^0(\tau_*) > 0\) by definition, we have
+    \begin{equation}
+        x^0 - r^0(\tau_*) = \abs{\vv{x} - \vv{r}(\tau_*)}.
+    \end{equation}
+    That is, the temporal distance, \(x^0 - r^0(\tau_*)\), between an observer and the particle is equal to the spatial distance, \(\abs{\vv{x} - \vv{r}(\tau_*)}\), between the observer and the particle.
+    This means that the particle can send out a light signal at time \(\tau_*\) and have it reach the observer.
+    
+    Note that the value of \(\tau_*\) depends both on \(x\), the position of the observer, and \(r(\tau)\), the trajectory of the particle.
+    We usually leave the \(x\) dependence implicit, thinking of the observer as being fixed and the particle as moving.
+    
+    The last thing we need to use \cref{eqn:delta(f(x))} is \(\abs{f'(\tau_*)}\).
+    This is not too difficult to compute, applying the chain rule gives
+    \begin{equation}
+        \diff{}{\tau} (x - r(\tau))^2 = 2(x - r(\tau)) \cdot (-r'(\tau)).
+    \end{equation}
+    In order to find \(\abs{f'(\tau_*)}\) we need to know the sign of this quantity evaluated at \(\tau = \tau_*\).
+    First notice that \(r'(\tau) = u^\mu(\tau)\).
+    Now consider the components of the two four vectors above, we have
+    \begin{equation}
+        x^\mu - r^\mu(\tau_*) = (x^0 - r^0(\tau_*), \vv{x} - \vv{r}(\tau_*)), \qand u^\mu(\tau_*) = (\gamma(\tau_*)c, \gamma(\tau_*)\vv{v}(\tau_*)).
+    \end{equation}
+    Note that the speed of the particle depends on \(\tau_*\), and hence so does \(\gamma\).
+    
+    We can then compute the scalar product of the four vectors:
+    \begin{equation}
+        (x - r(\tau_*)) \cdot u^\mu(\tau_*) = (x^0 - r^0(\tau_*)) \gamma c - (\vv{x} - \vv{r}(\tau_*)) \cdot \vv{v} \gamma.
+    \end{equation}
+    We can rewrite \(x^0 - r^0(\tau_*) = \abs{\vv{x} - \vv{r}(\tau_*)}\), and we can write the dot product of three-vectors in terms of the angle between them, \(\vartheta\), giving
+    \begin{align}
+        (x - r(\tau_*)) \cdot u^\mu(\tau_*) &= \abs{\vv{x} - \vv{r}(\tau_*)}\gamma c = \gamma\abs{\vv{x} - \vv{r}(\tau_*)}\abs{\vv{v}} \cos\vartheta\\
+        &= \gamma \abs{\vv{x} - \vv{r}(\tau_*)} (c - \abs{\vv{v}} \cos\vartheta).
+    \end{align}
+    Noticing that \(\gamma \ge 1\) and \(\abs{\vv{x} - \vv{r}(\tau_*)} \ge 0\) we see that this scalar product is non-negative only if \(c - \abs{\vv{v}}\cos\vartheta\) is non-negative.
+    Since \(\abs{\vv{v}} \le c\) and \(\cos\vartheta \in [-1, 1]\) this is indeed non-negative and so
+    \begin{equation}
+        (x - r(\tau_*)) \cdot u^\mu(\tau_*) \ge 0 \implies \abs{f'(\tau_*)} = \abs{2(x - r(\tau_*)) \cdot (-u(\tau_*))} = 2(x - r(\tau_*))\cdot u(\tau_*).
+    \end{equation}
+    
+    We can then use \cref{eqn:delta(f(x))}, and we have
+    \begin{equation}
+        \delta((x - r(\tau))^2) = \frac{\delta(\tau - \tau_*)}{2(x - r(\tau_*)) \cdot u(\tau_*)}.
+    \end{equation}
+    Putting this into our expression for the potential we have
+    \begin{align}
+        A^\mu(x) &= \frac{e}{2\pi} \int \dl{\tau} \, \theta(x^0 - r^0(\tau)) \delta((x - r(\tau))^2) u^\mu(\tau)\\
+        &= \frac{e}{4\pi} \int \dl{\tau} \, \frac{\delta(\tau - \tau_*)}{(x - r(\tau_*)) \cdot u(\tau_*)} u^\mu(\tau)\\
+        &= \frac{e}{4\pi} \frac{u^\mu(\tau_*)}{(x - r(\tau_*)) \cdot u(\tau_*)}.
+    \end{align}
+    This is called the \defineindex{Li\'enard–Wiechert potential}.
+    Note that we can drop the \(\theta(x^0 - r^0(\tau_*))\) term after we make the change to the Dirac delta because we have selected zeros such that \(x^0 - r^0(\tau_*) > 0\).
+    
+    \begin{ntn}{}{}
+        We write
+        \begin{equation}
+            f|_{\ret} = f|_{\tau = \tau_*} = f(\tau_*),
+        \end{equation}
+        so, for example,
+        \begin{equation*}
+            A_\mu(x) = \frac{e}{4\pi} \frac{u^\mu}{(x - r) \cdot u} \bigg|_{\ret} = \frac{e}{4\pi} \frac{u^\mu}{(x - r)\cdot u} \bigg|_{\ret} = \frac{e}{4\pi} \frac{u^\mu(\tau_*)}{(x - r(t_*))\cdot u(\tau_*)}.
+        \end{equation*}
+        
+        We write
+        \begin{equation}
+            R^\mu(\tau, x) = R^\mu(\tau) = x^\mu - r^\mu(\tau),
+        \end{equation}
+        so, for example,
+        \begin{equation}
+            A^\mu(x) = \frac{e}{4\pi} \frac{u^\mu}{R \cdot u} \bigg|_{\ret}.
+        \end{equation}
+        Note that by the definition of \(\tau_*\) we have \(R(\tau_*) \cdot R(\tau_*) = 0\) and \(R^0(\tau_*) > 0\).
+    \end{ntn}
+    
+    \section{Components of the Potential}
+    We want to work out the temporal and spatial components of \(A^\mu(x)\).
+    In order to do this we need the components of \(u^\mu\), and the value of \(u \cdot R\), all at \(\tau = \tau_*\).
+    We know that the four velocity has components
+    \begin{equation}
+        u^\mu(\tau_*) = (\gamma(\tau_*) c, \gamma(\tau_*) c \vv{\beta}(\tau_*)) = \gamma c(1, \vv{\beta})|_{\ret}
+    \end{equation}
+    where \(\vv{\beta} = \vv{v}/c\).
+    Note that \(\gamma\) and \(\vv{\beta}\) both depend on \(\tau_*\).
+    We also have
+    \begin{equation}
+        R^\mu(\tau_*) = (R^0(\tau_*), \vv{R}(\tau_*)) = (\abs{\vv{R}(\tau_*)}, \abs{\vv{R}(\tau_*)}\vh{n}) = \abs{\vv{R}}(1, \vh{n}) |_{\ret}.
+    \end{equation}
+    where \(\vh{n}\) is a unit vector pointing from the position of the particle to the position of the observer.
+    Note that we have used
+    \begin{equation}
+        R(\tau_*)^2 = R^0(\tau_*) - \vv{R}(\tau_*)^2 \implies R^0(\tau_*) = \vv{R}(\tau_*),
+    \end{equation}
+    where we take the positive square root since \(R^0(\tau_*) > 0\).
+    
+    We can then compute \(R \cdot u |_{\ret}\):
+    \begin{equation}
+        R \cdot u |_{\ret} = \gamma c \abs{\vv{R}}(1 - \vv{\beta} \cdot \vh{n}) |_{\ret}.
+    \end{equation}
+    The temporal component of the potential is then
+    \begin{equation}
+        A^0(x) = \frac{e}{4\pi} \frac{\gamma c}{\gamma c \abs{\vv{R}}(1 - \vv{\beta}\cdot\vh{n})}\bigg|_{\ret} = \frac{e}{4\pi\abs{\vv{R}}} \frac{1}{1 - \vv{\beta}\cdot\vh{n}}\bigg|_{\ret}.
+    \end{equation}
+    Notice that for a stationary particle at the origin we have \(\vv{\beta} = \vv{0}\) and \(R = x\) so
+    \begin{equation}
+        A^0(x) = \varphi(x) = \frac{e}{4\pi x},
+    \end{equation}
+    which is just the Coulomb potential as expected.
+    
+    The spatial component of the potential is
+    \begin{equation}
+        \vv{A}(x) = \frac{e}{4\pi} \frac{\gamma c \vv{\beta}}{\gamma c \abs{\vv{R}}(1 - \vv{\beta}\cdot\vh{n})} \bigg|_{\ret} = \frac{e}{r\pi \abs{\vv{R}}} \frac{\vv{\beta}}{1 - \vv{\beta}\cdot\vh{n}} \bigg|_{\ret}.
+    \end{equation}
+    
+    We see that there are two relativistic phenomena at play:
+    \begin{itemize}
+        \item retarded time, due to the finite speed of propagating signals, and
+        \item powers of \(1 - \vv{\beta}\cdot\vh{n}\), here \((1 - \vv{\beta}\cdot \vh{n})^{-1}\), we'll see that these arise a lot in the rest of the course.
+    \end{itemize}
+    Note that for a massive particle \(\abs{\vv{\beta}} < 1\), since \(\abs{\vv{v}} < c\), and so \(\vv{\beta}\cdot\vh{n} < 1\), meaning that \(1 - \vv{\beta}\cdot\vh{n} \ne 0\), so we don't have issues with singularities.
+    
+    \chapter{Radiation: The Field}
+    \section{Goal}
+    In this chapter we will derive the field corresponding to the Li\'enard--Wiechert potential,
+    \begin{equation}
+        A_\mu(x) = \frac{e}{4\pi} \frac{u_\mu}{R \cdot u} \bigg|_{\ret}.
+    \end{equation}
+    The electromagnetic field tensor is given, as usual, by
+    \begin{equation}
+        F_{\mu\nu} = \partial_\mu A_\nu - \partial_\nu A_\mu.
+    \end{equation}
+    To compute this we will need to work out various derivatives, such as \(\partial_\mu u_\nu(\tau_*)\).
+    We have to be careful when doing this because these derivatives are with respect to (components of) \(x\) and \(\tau_*\) depends on \(x\).
+    Hence, we first want to compute \(\partial_\mu \tau_*\).
+    
+    \section{\texorpdfstring{\(\partial_\mu \tau_*\)}{Derivative of Proper Retarded Time}}
+    The only think we really know about \(\tau_*\) is its definition, its such that \((x - r(\tau_*))^2 = 0\).
+    Starting from this we take a derivative of this definition hoping to extract \(\partial_\mu \tau_*\):
+    \begin{equation}
+        \partial_\mu(x - r(\tau_*))^2 = 0.
+    \end{equation}
+    Writing the scalar product out we get
+    \begin{equation}
+        0 = \partial_\mu(x_\nu - r_\nu(\tau_*))(x^\nu - r^\nu(\tau_*)).
+    \end{equation}
+    
+    We now use the relation \(\partial_\mu a^2 = 2a_\nu \partial_\mu a^\nu\) which holds for any four-vector, \(a\), in special relativity since the metric is constant:
+    \begin{multline}
+        \partial_\mu a^2 = \partial_\mu a_\nu a^\nu = (\partial_\mu a_\nu)a^\nu + a_\nu (\partial_\mu a^\nu) = (\partial_\mu a^\rho \eta_{\nu\rho}) a^\nu + a_\nu (\partial_\mu a^\nu)\\
+        = (\partial_\mu a^\rho)\eta_{\nu\rho}a^\nu + a_\nu (\partial_\mu a^\nu) = (\partial_\mu a^\rho)a_\rho + a_\nu (\partial_\mu a^\nu) = 2a_\nu \partial_\mu a^\nu.
+    \end{multline}
+    In the last equality we rename \(\rho\) to \(\nu\) in the first term.
+    
+    Using this we have
+    \begin{equation}
+        0 = 2(x_\nu - \rho_\nu(\tau_*)) \partial_\mu(x^\nu - r^\nu(\tau_*)).
+    \end{equation}
+    The first bracket is simply \(R_\nu(\tau_*)\).
+    The derivative distributes over the second bracket giving
+    \begin{equation}
+        \partial_\mu(x^\nu - r^\nu(\tau_*)) = \partial_\mu x^\nu - \partial_\mu r^\nu(\tau_*) = \delta^\nu_\mu - \diff{r^\nu}{\tau} \partial_\mu \tau_*
+    \end{equation}
+    where the second equality follows by applying the chain rule in the last term.
+    Putting this back with the rest we get
+    \begin{equation}
+        0 = R_\nu(\tau_*) \left( \delta_\mu^\nu - \diff{r^\nu}{\tau}[\tau = \tau_*] \partial_\mu \tau_* \right).
+    \end{equation}
+    Expanding the bracket and recognising \(\diff{r}/{\tau} = u\) we get
+    \begin{equation}
+        0 = R_\mu(\tau_*) - R(\tau_*) \cdot u(\tau_*) \partial_\mu \tau_*.
+    \end{equation}
+    Solving for \(\partial_\mu \tau_*\) we get
+    \begin{equation}
+        \partial_\mu \tau_* = \frac{R_\mu(\tau_*)}{R(\tau_*) \cdot \diff{r}{\tau}} = \frac{R_\mu}{R \cdot u} \bigg|_{\ret}.
+    \end{equation}
+    
+    This vector is quite important and appears a lot, so we give it a name.
+    Define
+    \begin{equation}
+        k_\mu \coloneqq c\partial_\mu \tau_* = \frac{cR_\mu}{R \cdot u} \bigg|_{\ret}.
+    \end{equation}
+    The factor of \(c\) makes this dimensionless.
+    In order to decrease factors of \(c\) we also define a dimensionless velocity,
+    \begin{equation}
+        w_\mu \coloneq \frac{u_\mu}{c}.
+    \end{equation}
+    This definition is not conventional, usually people just set \(c = 1\) and work with \(u_\mu\).
+    We can then write \(k_\mu\) as
+    \begin{equation}
+        k_\mu = \frac{R_\mu}{R \cdot w} \bigg|_{\ret}.
+    \end{equation}
+    
+    These vectors are nice to work with as they are dimensionless, and also have some nice properties.
+    First, note that \(k \cdot k \propto R \cdot R|_{\ret} = 0\) by the definition of \(\tau_*\), so \(k\cdot k = 0\).
+    Next, we have
+    \begin{equation}
+        k \cdot w = \frac{R_\mu}{R \cdot w} w^\mu \bigg|_{\ret} = \frac{R\cdot w}{R \cdot w} = 1.
+    \end{equation}
+    We also know that \(u \cdot u = c^2\), and hence \(w \cdot w = 1\).
+    
+    Consider the static situation, where the three-velocity of the particle vanishes.
+    We then have \(w^\mu = (1, \vv{0})\).
+    We've also seen that we have \(R^\mu(\tau_*) = \abs{\vv{R}}(1, \vh{n})\).
+    We then have
+    \begin{equation}
+        R \cdot w|_{\ret} = \abs{\vv{R}}.
+    \end{equation}
+    We also have
+    \begin{equation}
+        k_\mu = \frac{R_\mu}{R \cdot w} \bigg|_{\ret} = \frac{\abs{\vv{R}}(1, \vh{n})}{\abs{\vv{R}}} = (1, \vh{n}).
+    \end{equation}
+    This shows that we can think of \(k_\mu\) as generalising the unit vector \(\vh{r}\) pointing from the source to the observation point in non-relativistic electromagnetism.
+    
+    \section{\texorpdfstring{\(\partial_\mu u_\nu(\tau_*)\)}{Derivative of Four-Velocity}}\label{sec:derivative of four-vel}
+    In order to compute \(\partial_\mu A_\nu\) we need to compute \(\partial_\mu u_\nu(\tau_*)\), since this term appears in the potential.
+    This is fairly simple to do through an application of the chain rule:
+    \begin{equation}
+        \partial_\mu u_\nu(\tau_*) = \diff{u_\nu}{\tau}[\tau = \tau_*] \partial_\mu \tau_* = \diff{w_\mu}{\tau}[\tau = \tau_*] k_\mu = \dot{w}_\nu(\tau_*) k_\mu.
+    \end{equation}
+    Note that the factor of \(c\) from \(u_\nu = cw_\nu\) cancels with the factor of \(c\) from \(\partial_\mu \tau_* = k_\mu/c\).
+    We also introduce here the notation
+    \begin{equation}
+        \dot{f} = \diff{f}{\tau},
+    \end{equation}
+    which we will use for the rest of the course.
+    Note that a dot denotes a derivative with respect to proper time, \emph{not} with respect to coordinate time.
+    
+    \section{\texorpdfstring{\(\partial_\mu(R(\tau_*) \cdot u(\tau_*))\)}{Derivative of R dot u}}
+    In order to compute \(\partial_\mu A_\nu\) we need to compute \(\partial_\mu (R(\tau_*) \cdot u(\tau_*))\), since this term appears in the potential.
+    First, write out the scalar product in terms of indices:
+    \begin{equation}
+        \partial_\mu(R(\tau_*) \cdot u(\tau_*)) = \partial_\mu(R_\nu(\tau_*) u^\nu(\tau_*)).
+    \end{equation}
+    Then insert the definition of \(R_\nu(\tau_*)\):
+    \begin{equation}
+        \partial_\mu(R(\tau_*) \cdot u(\tau_*)) = \partial_\mu(x_\nu - r_\nu(\tau_*)) u^\nu(\tau_*).
+    \end{equation}
+    We can then proceed to apply the product rule, giving
+    \begin{equation}
+        \partial_\mu(R(\tau_*) \cdot u(\tau_*)) = [\partial_\mu(x_\nu - r_\nu(\tau_*))]u^\nu(\tau_*) + (x_\nu - r_\nu(\tau_*))\partial_\mu u^\nu(\tau_*).
+    \end{equation}
+    
+    Consider the term in square brackets.
+    Distributing the derivative we have
+    \begin{equation}
+        \partial_\mu(x_\nu - r_\nu(\tau_*)) = (\partial_\mu x_\nu - r_\nu(\tau_*)) = \eta_{\mu\nu} - u_\nu(\tau_*)\partial_\mu \tau_*.
+    \end{equation}
+    The first term follows from
+    \begin{equation}
+        \partial_\mu x_\nu = \partial_\mu x^\rho \eta_{\nu\rho} = \delta_\mu^\rho \eta_{\nu\rho} = \eta_{\nu\mu} = \eta_{\mu\nu}.
+    \end{equation}
+    The second term follows from an application of the chain rule and identifying \(\diff{r}/{\tau} = u\).
+    
+    Now consider the second term, the derivative here is just the result in \cref{sec:derivative of four-vel} with an indexed raised, so
+    \begin{equation}
+        \partial_\mu u^\nu(\tau_*) = \dot{w}^\nu(\tau_*) k_\mu.
+    \end{equation}
+    
+    Putting this together we have
+    \begin{equation}
+        \partial_\mu(R(\tau_*) \cdot u(\tau_*)) = (\eta_{\mu\nu} - u_\nu(\tau_*)\partial_\mu \tau_*)u^\nu(\tau_*) + R_\nu(\tau_*) \dot{w}^\nu(\tau_*) k_\mu.
+    \end{equation}
+    We can improve on this by writing it in terms of the dimensionless \(k_\mu\) and \(w_\mu\):
+    \begin{equation}
+        \partial_\mu(R(\tau_*) \cdot u(\tau_*)) = (\eta_{\mu\nu} - w_\nu(\tau_*)k_\mu)cw^\nu(\tau_*) + R_\nu(\tau_*) \dot{w}^\nu(\tau_*) k_\mu.
+    \end{equation}
+    Expanding the bracket we get
+    \begin{equation}
+        \partial_\mu(R(\tau_*) \cdot u(\tau_*)) = cw_\mu(\tau_*) - cw_\nu(\tau_*)k_\mu w^\nu(\tau_*) + R_\nu(\tau_*) \dot w^\nu(\tau_*) k_\mu.
+    \end{equation}
+    Notice that in the second term we have \(w \cdot w = 1\), so
+    \begin{equation}
+        \partial_\mu(R(\tau_*) \cdot u(\tau_*)) = cw_\mu(\tau_*) - ck_\mu + R_\nu(\tau_*) \dot{w}^\nu(\tau_*) k_\mu.
+    \end{equation}
+    Writing the last term as a scalar product and factoring out a factor of \(c\) we get
+    \begin{align}
+        \partial_\mu(R(\tau_*) \cdot u(\tau_*)) &= c\left[ w_\mu(\tau_*) - k_\mu + \frac{1}{c} R \cdot \dot{w}(\tau_*) k_\mu  \right]\\
+        &= c\left[ w_\mu - k_\mu + \frac{1}{c}R \cdot \dot{w}k_\mu \right]\bigg|_{\ret}.
+    \end{align}
+    
+    \section{\texorpdfstring{\(\partial_\mu A_\nu\)}{Derivative of Potential}}
+    \epigraph{When you're doing a calculation, did you get it right? In my experience probably not.}{Donal O'Connell}
+    We can now work out \(\partial_\mu A_\nu\), which gets us most of the way to calculating the field tensor.
+    We start with
+    \begin{equation}
+        \partial_\mu A_\nu(x) = \partial_\mu \left[ \frac{e}{4\pi} \frac{u_\nu}{R \cdot u} \right] \bigg|_{\ret}.
+    \end{equation}
+    An application of the product rule gives
+    \begin{equation}
+        \partial_\mu A_\nu(x) = \frac{e}{4\pi}\left[ \frac{1}{R \cdot u} \partial_\mu u_\nu + u_\nu \partial_\mu \frac{1}{R \cdot u} \right] \bigg|_{\ret}.
+    \end{equation}
+    The first term is simple, we've already worked out \(\partial_\mu u_\nu(\tau_*) = \dot{w}_\nu(\tau_*)k_\mu\).
+    The second term requires a little more work since we know \(\partial_\mu(R(\tau_*) \cdot u(\tau_*))\), but this term appears in the denominator.
+    We therefore use the chain rule,
+    \begin{equation}
+        \partial_\mu \frac{1}{f(x)} = -\frac{\partial_\mu f(x)}{(f(x))^2},
+    \end{equation}
+    which gives
+    \begin{equation}
+        \partial_\mu \frac{1}{R(\tau_*) \cdot u(\tau_*)} = - \frac{c}{(R \cdot u)^2}\left[ w_\mu - k_\mu + \frac{1}{c} R \cdot \dot{w} k_\mu \right] \bigg|_{\ret}.
+    \end{equation}
+    
+    Putting this together we have
+    \begin{equation}
+        \partial_\mu A_\nu(x) = \frac{e}{4\pi} \left[ \frac{\dot{w}_\nu k_\mu}{R \cdot u} - \frac{cu_\nu}{(R \cdot u)^2} \left( w_\mu - k_\mu + \frac{1}{c} R \cdot \dot{w} k_\mu \right) \right] \bigg|_{\ret}.
+    \end{equation}
+    Here we have \(cu_\nu/(R\cdot u)^2 = w_\nu/(R\cdot w)^2\).
+    Hence, in terms of the dimensionless vectors \(k_\mu\) and \(w_\mu\) we have
+    \begin{equation}
+        \partial_\mu A_\nu(x) = \frac{e}{4\pi} \left[ \frac{k_\mu \dot{w}_\nu}{cR \cdot w} - \frac{w_\nu}{(R \cdot w)^2}\left( w_\mu - k_\mu + \frac{1}{c}R \cdot \dot{w}k_\mu\right) \right] \bigg|_{\ret}.
+    \end{equation}
+    Now expand the inner brackets to get
+    \begin{equation}
+        \partial_\mu A_\nu(x) = \frac{e}{4\pi} \left[ \frac{k_\mu \dot{w}_\nu}{cR\cdot w} - \frac{w_\mu w_\nu}{(R\cdot w)^2} + \frac{k_\mu w_\nu}{(R\cdot w)^2} - \frac{k_\mu w_\nu}{c(R\cdot w)^2} R\cdot \dot{w} \right] \bigg|_{\ret}.
+    \end{equation}
+    
+    Notice that in the last term we have \(R_\rho/(R \cdot w)|_{\ret} = k_\rho\), with the \(R_\rho\) appearing through the scalar product \(R \cdot \dot{w}\), so we have
+    \begin{equation}
+        \partial_\mu A_\nu(x) = \frac{e}{4\pi} \left[ \frac{k_\mu \dot{w}_\nu}{cR\cdot w} - \frac{w_\mu w_\nu}{(R\cdot w)^2} + \frac{k_\mu w_\nu}{(R\cdot w)^2} - \frac{k_\mu w_\nu}{cR\cdot w} k\cdot \dot{w} \right] \bigg|_{\ret}.
+    \end{equation}
+    
+    \subsection{Gauge Check}
+    We're working in the Lorenz gauge.
+    A good check to perform at this point is that we are indeed in the Lorenz gauge, that is that \(\partial^\mu A_\mu = 0\).
+    Since we've calculated \(\partial_\mu A_\nu\) this is as simple as raising an index and contracting with the other index:
+    \begin{equation}
+        \partial^\mu A_\mu(x) = \frac{e}{4\pi} \left[ \frac{k \cdot \dot{w}}{cR\cdot w} - \frac{w \cdot w}{(R \cdot w)^2} + \frac{k \cdot w}{(R \cdot w)^2} + \frac{k\cdot w}{cR\cdot w} k \cdot \dot{w} \right].
+    \end{equation}
+    We can then use the fact that \(w \cdot w = k \cdot w = 1\) and we see have
+    \begin{equation}
+        \renewcommand{\CancelColor}{\color{highlight}}
+        \partial^\mu A_\mu(x) = \frac{e}{4\pi} \left[ \cancel{\frac{k \cdot \dot{w}}{cR\cdot w}} \renewcommand{\CancelColor}{\color{my orange}} - \cancel{\frac{1}{(R \cdot w)^2}} + \cancel{\frac{1}{(R \cdot w)^2}} - \renewcommand{\CancelColor}{\color{highlight}} \cancel{\frac{1}{cR\cdot w} k \cdot \dot{w}} \mkern3mu \right] = 0.
+    \end{equation}
+    So the Lorenz gauge condition holds, which is a good sign we haven't gone too far astray.
+    
+    \section{\texorpdfstring{\(F_{\mu\nu}\) or }{}Finally the Field}
+    The field tensor is
+    \begin{equation}
+        F_{\mu\nu}(x) = \partial_\mu A_\nu(x) - \partial_\nu A_\mu(x).
+    \end{equation}
+    We've already worked out \(\partial_\mu A_\nu(x)\), so we're most of the way there.
+    
+    To make computing the field slightly simpler we use antisymmetrisation.
+    We define the \defineindex{antisymmetrisation} of the two index tensor \(T_{\mu\nu}\) to be
+    \begin{equation}
+        T_{(\mu\nu)} \coloneqq \frac{1}{2}(T_{\mu\nu} - T_{\nu\mu}).
+    \end{equation}
+    We can also apply this when \(T_{\mu\nu}\) is defined as a product of two four-vectors, such as \(T_{\mu\nu} = a_\mu b_\nu\), then we have
+    \begin{equation}
+        T_{(\mu\nu)} = a_{(\mu}b_{\nu)} \coloneqq \frac{1}{2}(a_\mu b_\nu - a_\nu b_\mu).
+    \end{equation}
+    Using this we can write the field tensor as
+    \begin{equation}
+        F_{\mu\nu} = 2\partial_{(\mu} A_{\nu)}.
+    \end{equation}
+    
+    Hence, we have
+    \begin{equation}
+        F_{\mu\nu} = \frac{2e}{4\pi} \left[ \frac{k_{(\mu}\dot{w}_{\nu)}}{c R\cdot w} - \frac{w_{(\mu}w_{\nu)}}{(R \cdot w)^2} + \frac{k_{(\mu}w_{\nu)}}{(R \cdot w)^2} - \frac{k_{(\mu}w_{\nu)}}{cR \cdot w} k \cdot \dot{w} \right] \bigg|_{\ret}.
+    \end{equation}
+    The second term vanishes, since
+    \begin{equation}
+        w_{(\mu}w_{\nu)} = \frac{1}{2}(w_\mu w_\nu - w_\nu w_\mu) = 0.
+    \end{equation}
+    We can think of this term as being there just to fix the gauge, and not having an effect on the field.
+    The other terms are fairly simple to, and expanding the antisymmetrisation we get
+    \begin{equation}
+        F_{\mu\nu} = \frac{e}{4\pi} \left[ \frac{k_\mu\dot{w}_\nu - k_\nu\dot{w}_\mu}{c R \cdot w} + \frac{k_\mu w_\nu - k_\nu w_\mu}{(R \cdot w)^2} + \frac{k_\mu w_\nu - k_\nu w_\mu}{cR\cdot w} k\cdot \dot{w} \right] \bigg|_{\ret}.
+    \end{equation}
+    
+    We can break this into two terms as follows:
+    \begin{equation}
+        F_{\mu\nu} = \frac{e}{4\pi} \frac{k_\mu w_\nu - k_\nu w_\mu}{(R \cdot w)^2} + \frac{e}{4\pi c} \frac{1}{R \cdot w}[k_\mu \alpha_\nu - k_\nu \alpha_\mu] \bigg|_{\ret}.
+    \end{equation}
+    Here we define a new four-vector,
+    \begin{equation}
+        \alpha^\mu \coloneqq \dot{w}^\mu - k \cdot \dot{w} w^\mu
+    \end{equation}
+    
+    \subsection{Interpretation}
+    The first term falls of as \(1 / \abs{\vv{R}}^2\).
+    It is also independent of acceleration.
+    We can identify this term as the Coulomb field.
+    
+    The second term is new.
+    It falls off as \(1/\abs{\vv{R}}\).
+    It's linear in the acceleration, since its linear in \(\alpha\) and \(\alpha\) is linear in \(\dot{w}\).
+    Note that \(\alpha\) was chosen to evoke \(a\) and acceleration for this purpose.
+    This term is called the \defineindex{radiation field}, and its the reason that accelerating particles radiate.
+    
+    \section{Constant Velocity Case}
+    \label{sec:constant velocity case}
+    Consider the case where the particle has a constant velocity, that is \(\dot{w}^\mu = 0\).
+    Then \(\alpha^\mu = 0\) for all \(\mu\), and so we have only the Coulomb field.
+    
+    We've seen that \(R^\mu(\tau_*) = \abs{\vv{R}}(1, \vh{n})\).
+    We also have \(w^\mu(\tau_*) = \gamma(1, \vv{\beta})\) where \(\vv{\beta} = \vv{v}/c\).
+    Note that \(\gamma\) does \emph{not} depend on \(\tau_*\), since the particle has a constant velocity.
+    
+    We then have \(R \cdot w = \gamma\abs{\vv{R}}(1 - \vh{n} \cdot \vv{\beta})\), and
+    \begin{equation}
+        k^\mu = \frac{R^\mu}{R \cdot w} \bigg|_{\ret} = \frac{(1, \vh{n})}{\gamma(1 - \vh{n}\cdot\vv{\beta})}.
+    \end{equation}
+
+    We can work out the electric field using \(E^i = F^{i0}\):
+    \begin{equation}
+        E^i(x) = F^{i0}(x) = \frac{e}{4\pi} \frac{k^i w^0 - k^0 w^i}{\gamma^2 \abs{\vv{R}}^2(1 - \vh{n} \cdot \vv{\beta})^2}.
+    \end{equation}
+    We know that
+    \begin{equation}
+        k^i = \frac{n^i}{\gamma(1 - \vh{n} \cdot \vv{\beta})}, \quad w^0 = \gamma, \quad k^0 = \frac{1}{\gamma(1 - \vh{n} \cdot \vv{\beta})}, \qand w^i = \gamma \beta^i.
+    \end{equation}
+    Using this
+    \begin{equation}
+        E^i(x) = \frac{e}{4\pi \abs{\vv{R}}^2} \frac{n^i - \beta^i}{\gamma^2(1 - \vh{n} \cdot \vv{\beta})^3},
+    \end{equation}
+    or in terms of three-vectors,
+    \begin{equation}
+        \vv{E}(x) = \frac{e}{4\pi\abs{\vv{R}}^2} \frac{\vh{n} - \vv{\beta}}{\gamma^2(1 - \vh{n}\cdot \vv{\beta})^3}.
+    \end{equation}
+    
+    To find the magnetic field we use \(F^{ij} = -\varepsilon^{ijk}B^k\).
+    In particular, to find \(B^l\) we multiply by another Levi-Civita symbol:
+    \begin{equation}
+        \varepsilon^{ijl} F^{ij} = -\varepsilon^{ijl}\varepsilon^{ijk}B^k = -2\delta^{lk}B^k,
+    \end{equation}
+    so,
+    \begin{equation}
+        B^l = -\frac{1}{2} \varepsilon^{lij} F^{ij}.
+    \end{equation}
+    We have
+    \begin{equation}
+        F^{ij}(x) = \frac{e}{4\pi} \frac{k^iw^j - k^jw^i}{\gamma^2 \abs{\vv{R}}^2(1 - \vh{n}\cdot\vv{\beta})^2} = \frac{e}{4\pi\abs{\vv{R}}^2} \frac{n^j\beta^k - n^k \beta^j}{\gamma^2(1 - \vh{n}\cdot\vv{\beta})^3}.
+    \end{equation}
+    We can identify \(n^j \beta^k - n^k \beta^j = \varepsilon^{ijk}n^i\), and so when we multiply by \(\varepsilon^{lij}\) we get a factor of \(\varepsilon^{lij}\varepsilon^{ijk} = 2\delta^{lk}\).
+    The factor of 2 cancels with the \(1/2\) in \(B^l = -\varepsilon^{lij}F^{ij}/2\).
+    We're then left with
+    \begin{equation}
+        \delta^{lk}(n^j \beta^k - n^k \beta^j) = n^j \beta^l - n^l \beta^j,
+    \end{equation}
+    and so
+    \begin{equation}
+        B^l = - \frac{e}{4\pi\abs{\vv{R}}^2} \frac{n^j \beta^l - n^l \beta^j}{\gamma^2(1 - \vh{n}\cdot \vv{\beta})^3}.
+    \end{equation}
+    Which gives us
+    \begin{equation}
+        \vv{B}(x) = -\frac{e}{4\pi\abs{\vv{R}}^2} \frac{1}{\gamma^2(1 - \vh{n}\cdot\vv{\beta})^3} \vh{n} \times \vv{\beta}.
+    \end{equation}
+    Since \(\vh{n} \times \vh{n} = \vv{0}\) we can write this as
+    \begin{equation}
+        \vv{B} = \vh{n} \times \vv{E}.
+    \end{equation}
+    
+    \chapter{Radiation: Analysing the Field}
+    \epigraph{Part of my goal in lecturing this course is to make you think I know what I'm talking about.}{Donal O'Connell}
+    
+    \section{Comparison with Previous Result}
+    In \cref{sec:constant velocity case} we computed the electric field from a point charge travelling at a constant velocity, \(u^\mu = cw^\mu\), to be
+    \begin{equation}
+        \vv{E}(x) = \frac{e}{4\pi \abs{\vv{R}}^2 \gamma^2} \frac{\vh{n} - \vv{\beta}}{(1 - \vh{n} \cdot \vv{\beta})^3} \bigg|_{\ret}.
+    \end{equation}
+    In \cref{sec:point charge} we computed the electric field from a point charge travelling at a constant velocity to be
+    \begin{equation}
+        \vv{E}^{\text{old}}(x) = \frac{e}{4\pi \abs{\vv{x}}^{3} \gamma^2} \frac{\vv{x}}{(1 - \beta^2 \sin^2 \vartheta)^{3/2}}.
+    \end{equation}
+    
+    Logically these two seemingly different fields must be the same.
+    Showing this is a case of making sure we properly understand what the different variables represent.
+    First, consider \cref{fig:spacetime radiation field quantities}.
+    This spacetime diagram shows how the position of the observer, \(x\), and retarded position of the particle, \(r(\tau_*)\), are related.
+    As well as this we see that there is some time when the particle and the observer share a time coordinate.
+    In the calculation of \(\vv{E}^{\text{old}}\) we chose to set up our coordinates such that the particle was at the origin at the time of measurement.
+    
+    \begin{figure}
+        \tikzsetnextfilename{space-time-diagram-radiation}
+        \begin{tikzpicture}
+            \draw[my purple, very thick] (2, 1) -- (4, 3);
+            \draw[my purple, thick] (2, 1) -- (2, 0) node [below] {\(\vv{r}(\tau_*)\)};
+            \draw[my purple, thick] (2, 1) -- (0, 1) node [left] {\(r^0(\tau_*)\)};
+            \fill[my orange] (4, 3) circle [radius = 0.05cm] node [right, text=black] {\textcolor{my orange}{\(x\)}, observer};
+            \draw[my orange, thick] (4, 3) -- (4, 0) node[below] {\(\vv{x}\)};
+            \draw[my orange, thick] (4, 3) -- (0, 3) node[left] {\(x^0\)};
+            \draw[thick, <->] (0, 5) -- (0, 0) -- (5, 0);
+            \node[below] at (5, 0) {space};
+            \node[left] at (0, 5) {\(ct\)};
+            \draw[highlight, very thick, ->] (1.4, 0) -- (4.4, 5) node [above right, text=black, outer sep=-3pt] {\textcolor{highlight}{\(c\tau\)}, particle world line};
+            \fill[my purple] (2, 1) circle [radius = 0.05cm] node [below right, outer sep=-2pt] {\(c\tau_*\)};
+            \fill[my green] (3.2, 3) circle [radius = 0.05cm];
+        \end{tikzpicture}
+        \caption{Spacetime diagram detailing the relation between various quantities in the radiation field.}
+        \label{fig:spacetime radiation field quantities}
+    \end{figure}
+    
+    \begin{figure}
+        \tikzsetnextfilename{space-diagram-radiation}
+        \begin{tikzpicture}
+            \draw[thick, my light blue] (-2, 0) -- (2, 2) node [pos=0.6, above, text=black, font=\small] {\(\vv{R}\)};
+            \draw[ultra thick, my light blue, ->] (-2, 0) -- (-1, 0.5) node [pos=0.9, above, text=black, font=\small] {\(\vh{n}\)};
+            \fill[my orange] (2, 2) circle [radius=0.05cm] node [right] {\(\vv{x}\)};
+            \draw[my orange, thick] (0, 0) coordinate (B) -- (2, 2) coordinate (C);
+            \draw[thick, ->] (-3, 0) -- (3, 0) node [below] {\(x\)};
+            \draw[thick, ->] (0, 0) -- (0, 3) node [left] {\(y\)};
+            \coordinate (A) at (2, 0);
+            \path pic[draw, "\(\vartheta\)", angle eccentricity=0.75, font=\small] {angle};
+            \path (-2, 0) coordinate (B) pic[draw, font=\small, "\(\varphi\)", angle eccentricity=1.25] {angle};
+            \draw[->, highlight, very thick] (-2, 0) -- (-0.8, 0) node [below, font=\small] {\(c\vv{\beta}\)};
+            \draw[|-|, thick] (-2, -0.5) -- (0, -0.5) node [midway, below] {\(d\)};
+        \end{tikzpicture}
+        \caption{Space diagram detailing the relation between various quantities in the radiation field.}
+        \label{fig:space radiation field quantities}
+    \end{figure}
+    
+    Now, suppose that we choose spatial coordinates such that the motion of the particle is in the \((x, y)\)-plane and \(z = 0\).
+    Then the setup is as shown in \cref{fig:space radiation field quantities}.
+    The left point on the \(x\) axis shows the position of the particle at time of measurement, if we are to measure the particle at the origin.
+    The distance along the \(x\)-axis, \(d\), is given by the time taken to travel this distance, which is \((x^0 - r^0(\tau_*))/c\), times the speed of the particle, \(c\abs{\vv{\beta}}\):
+    \begin{equation}
+        d = \abs{\vv{\beta}}(x^0 - r^0(\tau_*)) = \abs{\vv{\beta}}\abs{\vv{R}}.
+    \end{equation}
+    Here we have used the fact that \(\abs{\vv{R}(\tau)_*} = R^0(\tau_*)\).
+    
+    Hence, we can write \(\vv{R}\) in terms of \(\vv{x}\), the position of the observer, and \(\vv{\beta}\), the velocity of the particle, as
+    \begin{equation}
+        \vv{R} = \vv{x} + \vv{\beta} \abs{\vv{R}}.
+    \end{equation}
+    The unit vector, \(\vh{n}\), pointing from the particles position at the time of measurement to the observer is given by
+    \begin{equation}
+        \vh{n} = \frac{\vv{R}}{\abs{\vv{R}}} = \vv{\beta} + \frac{\vv{x}}{\abs{\vv{R}}}.
+    \end{equation}
+    Rearranging this we get
+    \begin{equation}
+        \vh{n} - \vv{\beta} = \frac{\vv{x}}{\abs{\vv{R}}}.
+    \end{equation}
+    Taking the dot product with \(\vh{n}\) and using the fact that \(\vh{n} \cdot \vh{n} = 1\) we get
+    \begin{equation}
+        1 - \vh{n} \cdot \vv{\beta} = \frac{1}{\abs{\vv{R}}} \vh{n} \cdot \vv{x}.
+    \end{equation}
+    Hence, we can write the radiation field as
+    \begin{equation}
+        \vv{E}(x) = \frac{e}{4\pi \gamma^2} \frac{\vv{x}/\abs{\vv{R}}}{\abs{\vv{R}}^3(1 - \vh{n} \cdot \vv{\beta})^3} \bigg|_{\ret}.
+    \end{equation}
+    This is now clearly parallel to \(\vv{x}\), which is the direction of \(\vv{E}^{\text{old}}\), so the two fields are in the same direction.
+    
+    We now need to check that they have the same magnitude.
+    Both have the same initial factor of \(e/(4\pi \gamma^2)\), so that's a good start.
+    To continue we want to write \(\abs{\vv{R}}(1 - \vh{n} \cdot \vv{\beta})\) in terms of \(\vv{x}\) and \(\vartheta\).
+    Consider the quantity \((\vh{n} - \vv{\beta})^2\), on the one hand this is equal to \(\abs{\vv{x}}^2 / \abs{\vv{R}}^2\), on the other hand expanding gives us
+    \begin{equation}
+        (\vh{n} - \vv{\beta})^2 = 1 - 2 \vh{n} \cdot \vv{\beta} + \beta^2.
+    \end{equation}
+    Now consider \((1 - \vh{n} \cdot \vv{\beta})^2\):
+    \begin{equation}
+        (1 - \vh{} \cdot \vv{\beta})^2 = 1 - 2 \vh{n} \cdot \vv{\beta} + (\vh{n} \cdot \vv{\beta})^2 = (\vh{n} - \vv{\beta})^2 - [\beta^2 - (\vh{n} \cdot \vv{\beta})^2].
+    \end{equation}
+    The term in square brackets can be rewritten using the angle, \(\varphi\), between the velocity vector and \(\vh{n}\):
+    \begin{equation}
+        \beta^2 - (\vh{n} \cdot \vv{\beta})^2 = \beta^2 - \beta^2 \cos^2\varphi = \beta^2 \sin^2 \varphi = \abs{\vv{\beta} \times \vh{n}}^2.
+    \end{equation}
+    We can rewrite this cross product by substituting in \(\vh{n} = \vv{x}/\abs{\vv{R}}\):
+    \begin{equation}
+        \vv{\beta} \times \vh{n} = \frac{1}{\abs{\vv{R}}}\vv{\beta} \times \vv{x} \implies \beta^2 - (\vh{n} \cdot \vv{\beta})^2 = \frac{1}{\abs{\vv{R}}^2}\abs{\vv{\beta} \times \vv{x}}^2.
+    \end{equation}
+    Finally, we have
+    \begin{equation}
+        (1 - \vh{n} \cdot \vv{\beta})^2 = \frac{\abs{\vv{x}}^2}{\abs{\vv{R}}^2} - \frac{\abs{\vv{\beta} \times \vv{x}}^2}{\abs{\vv{R}}^2} = \frac{\abs{\vv{x}}^2}{\abs{\vv{R}}^2}(1 - \beta^2 \sin^2 \vartheta),
+    \end{equation}
+    where \(\vartheta\) is the angle between the position of the observer and the velocity.
+    Hence, we have
+    \begin{equation}
+        \abs{\vv{R}}(1 - \vh{n} \cdot \vv{\beta}) = \abs{\vv{x}}(1 - \beta^2 \sin^2\vartheta)^{1/2}.
+    \end{equation}
+    If we substitute this into \(\vv{E}(x)\) we will find it has the same form as \(\vv{E}^{\text{old}}(x)\), showing that the two fields are indeed the same.
+    
+    \section{Radiation Field}
+    Recall that the general Li\'enard–Wiechert fields are given by
+    \begin{equation}
+        F_{\mu\nu}(x) = \frac{e}{4\pi} \frac{1}{(R \cdot w)^2} (k_\mu w_\nu - k_\nu w\mu) + \frac{e}{4\pi c} \frac{1}{R \cdot w} (k_\mu \alpha_n - k_\nu \alpha_\mu) \bigg|_{\ret}.
+    \end{equation}
+    Here \(w_\mu = u_\mu/c\), where \(u\) is the four-velocity of the particle,
+    \begin{equation}
+        k_\mu = \frac{R_\mu}{R \cdot w} \bigg|_{\ret},
+    \end{equation}
+    and
+    \begin{equation}
+        \alpha = \dot{w}^\mu - (k \cdot w) w^\mu
+    \end{equation}
+    where the dot represents a derivative with respect to the proper time.
+    
+    Notice that the first term falls of as \(1/R^2\), corresponding to the Coulomb field.
+    The second term, which is the radiation field, falls of as \(1/R\).
+    Hence, at large distances if the particle has nonzero acceleration the radiation field\footnote{we'll call the radiation field \(F^{\rad}\) or \(F_{\rad}\), whichever allows for more compact writing of sub/superscripts.},
+    \begin{equation}
+        F_{\mu\nu}^{\rad}(x) \coloneqq \frac{e}{4\pi c} \frac{1}{R \cdot w} (k_\mu \alpha_n - k_\nu \alpha_\mu) \bigg|_{\ret},
+    \end{equation}
+    and to first order the electromagnetic field is then
+    \begin{equation}
+        F_{\mu\nu} \approx F_{\mu\nu}^{\rad} + \order(1/R^2).
+    \end{equation}
+    
+    The radiation field is what we see as light.
+    It should be pretty obvious that this is the dominant effect at large distances.
+    We can detect light with our eyes, but not the Coulomb field.
+    
+    At this point we make a change which allows for simplification later.
+    We introduce a new value
+    \begin{equation}
+        \varepsilon_\mu \coloneqq \alpha_\mu - Xk_\mu,
+    \end{equation}
+    where \(X\) is some constant to be chosen later to simplify equations.
+    We have complete freedom in choosing \(X\) since
+    \begin{equation}
+        k_\mu \varepsilon_\nu - k_\nu \varepsilon_\mu = k_\mu \alpha_\nu - k_\mu X k_\nu - k_\nu \alpha_\mu + k_\nu X k_\mu = k_\mu \alpha_\nu - k_\nu \alpha_\mu,
+    \end{equation}
+    so the radiation field is invariant under this choice.
+    
+    The physics here is that if \(\varepsilon_0 = 0\) then \(\vv{\varepsilon}\) is parallel to \(\vv{E}\), which has components \(E^i = F^{i0}\).
+    This makes \(\varepsilon\) useful when working with polarised light.
+    
+    Recall that at \(\tau = \tau_*\) we have \(k \cdot k = 0\), \(k \cdot w = 1\), and \(k \cdot \alpha = 0\), which implies \(k \cdot \varepsilon = 0\) also.
+    
+    Radiation fields transport energy and momentum, so we should study the energy-momentum tensor,
+    \begin{equation}
+        \tensor{T}{^{\mu\nu}} \coloneqq \tensor{F}{^{\mu\rho}}\tensor{F}{_\rho^\nu} + \frac{1}{4}\eta^{\mu\nu} \tensor{F}{^{\alpha\beta}} \tensor{F}{_{\alpha\beta}}.
+    \end{equation}
+    Recall that \(T^{00} = u\) is the energy density and \(T^{i0} = S^i/c\) is parallel to the Poynting vector.
+    
+    We can compute the first term of the energy-momentum tensor fairly easily:
+    \begin{align}
+        \tensor*{F}{_{\rad}^{\mu\rho}}\tensor{{F_{\rad}}}{_\rho^\nu} &= \frac{e^2}{16\pi^2 c^2} \frac{1}{(R \cdot w)^2} (k^\mu \varepsilon^\rho - k^\rho \varepsilon^\mu)(k_\rho \varepsilon^\nu - k^\nu \varepsilon_\rho)\\
+        &= \frac{e^2}{16\pi^2 c^2} \frac{1}{(R \cdot w)^2}[k^\mu \varepsilon^\rho k_\rho \varepsilon^\mu - k^\rho \varepsilon_\mu k_\rho \varepsilon^\nu - k^\mu \varepsilon^\rho k^\nu \varepsilon_\rho + k^\rho \varepsilon^\mu k^\nu \varepsilon_\rho] \notag\\
+        &= -\frac{e^2}{16\pi^2 c^2} \frac{1}{(R \cdot w)^2} k^\mu k^\nu \varepsilon \cdot \varepsilon.
+    \end{align}
+    Here the first and fourth terms vanish as they contain \(k \cdot \varepsilon\), and the second term vanishes as it contains \(k \cdot k\), leaving only the third term.
+    
+    The second term in the energy-momentum tensor then vanishes completely, since we achieve this term by contracting over the \(\mu\) and \(\nu\) indices above, giving \(k \cdot k = 0\).
+    Hence, the energy-momentum tensor for the radiation field is
+    \begin{equation}
+        T_{\rad}^{\mu\nu} = -\frac{e^2}{16\pi^2 c^2} \frac{1}{(R \cdot w)^2} k^\mu k^\nu \varepsilon \cdot \varepsilon \bigg|_{\ret}.
+    \end{equation}
+    Note that the total energy-momentum tensor is
+    \begin{equation}
+        T^{\mu\nu} = T_{\rad}^{\mu\nu} + \order(1/R^3),
+    \end{equation}
+    with the \(1/R^3\) term coming from the cross term between the radiation field and the Coulomb field.
+    
+    The fact that \(T_{\rad} \sim 1/R^2\) is important.
+    Suppose we are integrating over a large surface, large enough that the Coulomb field is negligible.
+    Then the surface area goes with \(R^2\), so the integral will be constant.
+    This means that the energy passing through the surface is independent of the size of the surface, and in particular we don't lose energy, it just spreads out as we get further away.
+    This is basically Gauss' law.
+    
+    Note that in these equations we can think of \(k\) as the direction of propagation and \(\varepsilon\) has two interpretations.
+    First, its to do with the acceleration, \(\dot{w}\), of the particle.
+    Second, its to do with the polarisation of the light.
+    
+    \chapter{Radiation: The Poynting Vector}
+    \section{The Poynting Vector}
+    The Poynting vector is related to the energy-momentum tensor through \(S^i = cT^{i0}\).
+    Hence,
+    \begin{equation}
+        S^i = -\frac{e^2}{16\pi c} \frac{1}{(R \cdot w)} \varepsilon \cdot \varepsilon k^i k^0.
+    \end{equation}
+    We drop the \(\ret\) label since otherwise we'd have to write it for every equation here.
+    
+    Recall that
+    \begin{equation}
+        k^\mu = \frac{(1, \vh{n})}{\gamma(1 - \vh{n} \cdot \vv{\beta})}
+    \end{equation}
+    where \(\vh{n}\) is a unit vector in the direction of the observer from the particle and \(\vv{\beta} = \vv{v}/c\) is the velocity of the particle, normalised by a factor of \(c\).
+    Hence,
+    \begin{equation*}
+        k^0 = \frac{1}{\gamma(1 - \vh{n} \cdot \vv{\beta})}, \qand k^i = \frac{n^i}{\gamma(1 - \vh{n} \cdot \vv{\beta})} \implies k^ik^0 = \frac{n^i}{[\gamma(1 - \vh{n} \cdot \vv{\beta})]^2}.
+    \end{equation*}
+    We then define \(w^\mu = \gamma(1, \vv{\beta})\) and we've shown that \(R^\mu = \abs{R}(1, \vh{n})\), so
+    \begin{equation}
+        R \cdot w = \gamma \abs{\vv{R}} (1 - \vh{n} \cdot \vv{\beta}) \implies (R \cdot w)^2 = \gamma^2 \abs{\vv{R}}^2 (1 - \vh{n} \cdot \vv{\beta})^2.
+    \end{equation}
+    
+    We can then write the Poynting vector as 
+    \begin{equation}
+        \vv{S} = -\frac{e^2}{15\pi^2 c} \frac{1}{\abs{\vv{R}}^2} \frac{1}{[\gamma(1 - \vh{n} \cdot \vv{\beta})]^4} \varepsilon \cdot \varepsilon \vh{n}.
+    \end{equation}
+    
+    We'll start by considering the non-relativistic case, then we'll move on to the general case.
+    
+    \section{Non-Relativistic Case}
+    In the non-relativisticc case \(\beta \ll 1\), and hence \(1 - \vh{n} \cdot \vv{\beta} \approx 1\), also \(\gamma \approx 1\).
+    Recall that \(\varepsilon^\mu\) is defined as
+    \begin{equation}
+        \varepsilon^\mu = \dot{w}^\mu - (k \cdot \dot{w}) w^\mu - Xk^\mu
+    \end{equation}
+    where \(w^\mu = u^\mu/c\) is the four-velocity normalised by a factor of \(c\), \(X\) is some scalar field that we are free to choose, and the dot represents a proper time derivative.
+    
+    We will choose \(X\) such that \(\varepsilon^0 = 0\).
+    This is a sensible choice because 
+    \begin{equation}
+        F^{\mu\nu} \propto k^\mu \varepsilon^\nu - k^\nu\varepsilon^\mu \implies E^i = F^{i0} \propto k^i\varepsilon^0 - k^0\varepsilon^i,
+    \end{equation}
+    so if \(\varepsilon^0 = 0\) then \(E^i \propto \varepsilon^i\), so we can interpret \(\vv{\varepsilon}\) as the polarisation of \(\vv{E}\).
+    
+    Fixing \(\varepsilon^0 = 0\) we then have \(k \cdot \varepsilon = k^0\varepsilon^0 - \vv{k} \cdot \vv{\varepsilon} = -\vv{k} \cdot \vv{\varepsilon}\).
+    We know that \(k \cdot \varepsilon = 0\) in general, so \(\vv{k} \cdot \vv{\varepsilon} = 0\).
+    
+    In order to compute \(\varepsilon\) we need to know what \(\dot{w}^\mu\) is:
+    \begin{equation}
+        \dot{w}^\mu = \diff{}{\tau} [\gamma(1, \vv{\beta})].
+    \end{equation}
+    In the non-relativistic limit we have
+    \begin{equation}
+        \gamma = (1 + v^2/c^2)^{-1/2} \approx 1 + \frac{v^2}{c^2} + \order(v^4/c^4).
+    \end{equation}
+    Dropping the second order and higher terms we have \(\gamma \approx 1\).
+    On the other hand \(\vv{\beta} = \vv{v}/c\), and we keep the first order term.
+    The proper time derivative becomes a coordinate time derivative in the non-relativistic limit, so we have
+    \begin{equation}
+        \dot{w}^\mu \approx \diff{}{t} \left( 1, \frac{\vv{v}}{c} \right) = \left( 0, \frac{1}{c}\diff{\vv{v}}{t} \right).
+    \end{equation}
+    
+    We can then compute \(k \cdot \dot{w}\), using \(k^\mu = (1, \vh{n})\):
+    \begin{equation}
+        k\cdot \dot{w} \approx (1, \vh{n}) \cdot \left( 0, \frac{1}{c} \diff{\vv{v}}{t} \right) = -\frac{1}{c} \vh{n} \cdot \diff{\vv{v}}{t}.
+    \end{equation}
+    Hence,
+    \begin{equation}
+        \vv{\varepsilon} = \frac{1}{c} \diff{\vv{v}}{t} + \frac{1}{c} \vh{n} \cdot \diff{\vv{v}}{t} \frac{\vv{v}}{c} - X\vh{n} \approx \frac{1}{c} \diff{\vv{v}}{t} - X\vh{n},
+    \end{equation}
+    where we've dropped second order terms.
+    
+    Since \(\vv{k} = \vh{n}\) in the non-relativistic limit we have \(\vh{n} \cdot \vv{\varepsilon} = 0\), and so
+    \begin{equation}
+        \vh{n} \cdot \vv{\varepsilon} = \frac{1}{c} \vh{n} \cdot \diff{\vv{v}}{t} - X = 0
+    \end{equation}
+    which we can rearrange for \(X\):
+    \begin{equation}
+        X = \frac{1}{c}\vh{n} \cdot \diff{\vv{v}}{t}.
+    \end{equation}
+    Hence,
+    \begin{equation}
+        \vv{\varepsilon} = \frac{1}{c} \diff{\vv{v}}{t} - \left( \frac{1}{c} \vh{n} \cdot \diff{\vv{v}}{t} \right) \vh{n}.
+    \end{equation}
+    We can introduce a factor of \(\vh{n} \cdot \vh{n} = 1\) to write this as
+    \begin{equation}
+        \vv{\varepsilon} = \frac{1}{c}\left[ \diff{\vv{v}}{t} (\vh{n} \cdot \vh{n}) - \vh{n} \left( \vh{n} \cdot \diff{\vv{v}}{t} \right) \right].
+    \end{equation}
+    We can then recognise the vector triple product:
+    \begin{equation}
+        \vv{\varepsilon} = \frac{1}{c} \vh{n} \times \left( \vh{n} \times \diff{\vv{v}}{t} \right).
+    \end{equation}
+    
+    Hence, the non-relativistic limit of the Poynting vector is
+    \begin{equation}
+        \vv{S} \approx \frac{e^2}{16\pi^2c^3} \frac{1}{\abs{\vv{R}}^3} \abs*{\vh{n} \times \left( \vh{n} \times \diff{\vv{v}}{t} \right)}^2 \vh{n}.
+    \end{equation}
+    If \(\vartheta\) is the angle between \(\vh{n}\) and \(\diff{\vv{v}}/{t}\) then \(\abs{\vh{n} \times \diff{\vv{v}}/{t}} = \sin \vartheta \abs{\diff{\vv{v}}/{t}}\).
+    By definition, the vector \(\vh{n} \times \diff{\vv{v}}/{t}\) is perpendicular to \(\vh{n}\), so taking the cross product with \(\vh{n}\) we get
+    \begin{equation}
+        \vh{n} \times \left( \vh{n} \times \diff{\vv{v}}{t} \right) = \abs{\sin\vartheta} \abs*{\diff{\vv{v}}{t}} \sin\frac{\pi}{2} = \abs{\sin\vartheta} \abs*{\diff{\vv{v}}{t}}.
+    \end{equation}
+    Hence,
+    \begin{equation}
+        \vv{S} \approx \frac{e^2}{16\pi^2 c^3} \frac{1}{\abs{\vv{R}}} \sin^2\vartheta \left( \diff{\vv{v}}{t} \right)^2 \vh{n}.
+    \end{equation}
+    
+    There is, therefore, no radiation directly ahead, when \(\vartheta = 0\), and the radiation is maximised at \(\vartheta = \pi/2\).
+    This is shown in \cref{fig:poynting non-relativistic radiation,fig:poynting non-relativistic radiation polar}.
+    
+    \begin{figure}
+        \tikzsetnextfilename{poynting-non-relativistic-radiation}
+        \begin{tikzpicture}
+            \draw[thick, ->] (-pi, 0) -- (pi, 0) node [below] {\(\vartheta\)};
+            \draw[thick, ->] (0, 0) -- (0, 2) node [left] {\(\abs{\vv{S}}\)};
+            \draw[thick, my orange, domain=-pi:pi, samples=400] plot (\x, {1.8*sin(\x r)*sin(\x r)});
+            \node[below] at (pi/2, 0) {\(\tfrac{\pi}{2}\)};
+            \node[below] at (-pi/2, 0) {\(\mathllap{-}\tfrac{\pi}{2}\)};
+        \end{tikzpicture}
+        \caption{The magnitude of the Poynting vector is maximised at \(\pm \pi/2\) in the non-relativistic case.}
+        \label{fig:poynting non-relativistic radiation}
+    \end{figure}
+    
+    \begin{figure}
+        \tikzsetnextfilename{poynting-non-relativistic-radiation-polar}
+        \begin{tikzpicture}
+            \draw[thick, ->] (-2, 0) -- (2, 0) node [below] {\(\diff{\vv{v}}/{t}\)};
+            \draw[thick, my orange, domain=0:360, samples=500] plot (\x:{2*sin(\x)*sin(\x)});
+        \end{tikzpicture}
+        \caption[Polar plot of non-relativistic Poynting vector.]{This polar plot shows how the magnitude of the Poynting vector varies with the angle \(\vartheta\). Pick some position for the observer relative to the particle's acceleration, which is horizontal here. Draw a line to that point from the centre of the figure of 8. The distance from the centre that this line crosses the figure of 8 again gives the magnitude of the Poynting vector in that direction. If it doesn't cross again then the magnitude is zero.}
+        \label{fig:poynting non-relativistic radiation polar}
+    \end{figure}
+    
+    \section{General Case}
+    Now we consider the general relativistic case.
+    Again, we chose to have \(\varepsilon^0 = 0\).
+    Then we have
+    \begin{equation}
+        0 = k \cdot \varepsilon = - \frac{1}{\gamma(1 - \vh{n} \cdot \vv{\beta})} \vh{n} \cdot \vv{\varepsilon}.
+    \end{equation}
+    Hence, \(\vh{n} \cdot \vv{\varepsilon} = 0\) again.
+    We again look for \(\vv{\varepsilon}\) to be of the form \(\vh{n}\) crossed with something.
+    
+    \subsection{Step 1: Compute \texorpdfstring{\(k \cdot \dot{w}\)}{k . dw/dtau}}
+    Using the product rule we have
+    \begin{equation}
+        \dot{w}^\mu = \diff{}{\tau} [\gamma(1, \vv{\beta})] = \dot{\gamma} (1, \vv{\beta}) + \gamma (0, \dot{\vv{\beta}}).
+    \end{equation}
+    We can find \(\dot{\gamma}\) by considering \(1 = \gamma^2(1 - \vv{\beta}^2)\), and taking the derivative:
+    \begin{equation}
+        0 = \diff{}{\tau} [\gamma^2(1 - \vv{\beta}^2)] = 2\gamma\dot{\gamma}(1 - \vv{\beta})^2 - 2\gamma^2\vv{\beta} \cdot \dot{\vv{\beta}}.
+    \end{equation}
+    Rearranging we have
+    \begin{equation}
+        \dot{\gamma} = \gamma^3 \vv{\beta} \cdot \dot{\vv{\beta}}.
+    \end{equation}
+    Hence,
+    \begin{equation}
+        \dot{w}^\mu = \gamma^3 \vv{\beta} \cdot \dot{\vv{\beta}}(1, \vv{\beta}) + \gamma(0, \vv{\dot{\beta}}).
+    \end{equation}
+    
+    We can then compute \(k \cdot \dot{w}\):
+    \begin{equation}
+        k \cdot \dot{w} = \gamma^2 \vv{\beta} \cdot \dot{\vv{\beta}} - \frac{\vh{n} \cdot \dot{\vv{\beta}}}{1 - \vh{n} \cdot \vv{\beta}}.
+    \end{equation}
+    
+    \subsection{Step 2: Compute \texorpdfstring{\(\vv{\varepsilon}\)}{epsilon vector}}
+    We can then compute \(\vv{\varepsilon}\):
+    \begin{align}
+        \vv{\varepsilon} &= \dot{\vv{w}} - (k \cdot \dot{w}) \vv{w} - X \vv{k}\\
+        &= \gamma^3 \vv{\beta} \cdot \dot{\vv{\beta}} + \gamma \dot{\vv{\beta}} - \gamma^3 \vv{\beta} \cdot \dot{\vv{\beta}} \vv{\beta} + \frac{\vh{n} \cdot \dot{\vv{\beta}}}{1 - \vh{n} \cdot \vv{\beta}} \gamma \vv{\beta} - X \frac{\vh{n}}{\gamma(1 - \vh{n} \cdot \vv{\beta})}\\
+        &= \frac{\gamma}{1 - \vh{n} \cdot \vv{\beta}} \left[ \dot{\vv{\beta}} (1 - \vh{n} \cdot \vv{\beta}) + \vh{n} \cdot \dot{\vv{\beta}} \vv{\beta} - \frac{X}{\gamma^2}\vh{n} \right].
+    \end{align}
+    
+    \subsection{Step 3: Impose \texorpdfstring{\(\vv{\varepsilon} \cdot \vh{n} = 0\)}{epsilon dot n-hat = 0}}
+    Imposing \(\vv{\varepsilon} \cdot \vh{n} = 0\), which is equivalent to \(\varepsilon^0 = 0\), we have
+    \begin{align}
+        0 &= \vv{\varepsilon} \cdot \vh{n}\\
+        &= \frac{\gamma}{1 - \vh{n} \cdot \vv{\beta}} \left[ \vh{n} \cdot \dot{\vv{\beta}} - (\vh{n} \cdot \dot{\vv{\beta}})(\vh{n} \cdot \vv{\beta}) + (\vh{n} \cdot \dot{\vv{\beta}})(\vh{n} \cdot \vv{\beta}) - \frac{X}{\gamma^2} \vh{n} \cdot \vh{n} \right]\\
+        &= \frac{\gamma}{1 - \vh{n} \cdot \vv{\beta}} \left[ \vh{n} \cdot \vv{\beta} - \frac{X}{\gamma^2} \right].
+    \end{align}
+    Since \(\gamma/(1 - \vh{n} \cdot \vv{\beta}) \ne 0\) we must have that
+    \begin{equation}
+        X = \gamma^2 \vh{n} \cdot \dot{\vv{\beta}}.
+    \end{equation}
+    
+    \subsection{Step 4: Rearrange}
+    Starting from
+    \begin{equation}
+        \vv{\varepsilon} = \frac{\gamma}{1 - \vh{n} \cdot \vv{\beta}} \left[ \dot{\vv{\beta}} (1 - \vh{n} \cdot \vv{\beta}) + \vh{n} \cdot \dot{\vv{\beta}} \vv{\beta} - \frac{X}{\gamma^2}\vh{n} \right]
+    \end{equation}
+    we can rewrite this as
+    \begin{equation}
+        \vv{\varepsilon} = \frac{\gamma}{1 - \vh{n} \cdot \vv{\beta}} \left[ \dot{\vv{\beta}} \vh{n} \cdot (\vh{n} - \vv{\beta}) - (\vh{n} - \vv{\beta}) \vh{n} \cdot \dot{\vv{\beta}} \right].
+    \end{equation}
+    Recognising the vector triple product this gives
+    \begin{equation}
+        \vv{\varepsilon} = \frac{\gamma}{1 - \vh{n} \cdot \vv{\beta}} \vh{n} \times ((\vh{n} - \vv{\beta}) \times \dot{\vv{\beta}}).
+    \end{equation}
+    
+    The Poynting vector is they
+    \begin{equation}
+        \vv{S} = \frac{e^2}{16\pi^2 c} \frac{1}{\abs{\vv{R}}^2} \frac{1}{\gamma^2(1 - \vh{n} \cdot \vv{\beta})} \abs{\vh{n} \times ((\vh{n} - \vv{\beta}) \times \dot{\vv{\beta}})}^2 \vh{n} \bigg|_{\ret}.
+    \end{equation}
+    Note that this depends on the velocity, whereas the non-relativistic case only depended on the acceleration.
+    This case is too complex for further general analysis, instead we consider the specific case of linear acceleration.
+    
+    \section{Linear Acceleration Case}
+    For linear acceleration we have \(\vv{\beta}\) and \(\dot{\vv{\beta}}\) parallel, and hence \(\vv{\beta} \times \dot{\vv{\beta}} = \vv{0}\).
+    The Poynting vector is then given by
+    \begin{equation}
+        \vv{S} = \frac{e^2}{16\pi^2 c} \frac{1}{\abs{\vv{R}}^2} \frac{1}{\gamma(1 - \beta \cos \vartheta)^6} \abs{\dot{\vv{\beta}}}^2 \sin^2(\vartheta) \vh{n},
+    \end{equation}
+    where we've again introduced \(\vartheta\) as the angle between \(\vh{n}\) and \(\dot{\vv{\beta}}\), which in this specific case is also the angle between \(\vh{n}\) and \(\vv{\beta}\), allowing us to simplify \(\vh{n} \cdot \vv{\beta}\) as well.
+    
+    Suppose that \(\beta \approx 1\), then for \(\vartheta \approx 0\) the value \(1/(1 - \beta\cos\vartheta)\) will get very large.
+    This means we will have very intense radiation in the direction of \(\vv{\beta}\), which is called \defineindex{relativistic beaming}, although directly ahead of the particle there will still be a dark spot.
+    This also happens to a lesser extent for smaller values of \(\beta\), as demonstrated in \cref{fig:poynting relativistic radiation,fig:poynting relativistic radiation polar}.
+    
+    \begin{figure}
+        \tikzsetnextfilename{poynting-relativistic-radiation}
+        \begin{tikzpicture}
+            \draw[thick, ->] (-pi, 0) -- (pi, 0) node [below] {\(\vartheta\)};
+            \draw[thick, ->] (0, 0) -- (0, 2.6) node [left] {\(\abs{\vv{S}}\)};
+            \draw[thick, my orange, domain=-pi:pi, samples=400] plot (\x, {0.3*sin(\x r)*sin(\x r)/((1-0.5*cos(\x r))^6)});
+            \node[below] at (pi/2, 0) {\(\tfrac{\pi}{2}\)};
+            \node[below] at (-pi/2, 0) {\(\mathllap{-}\tfrac{\pi}{2}\)};
+        \end{tikzpicture}
+        \caption{The magnitude of the Poynting vector for the relativistic case. There is a dark spot directly ahead, but slightly to the side of this there will be a high intensity of radiation. Note that the scale on the \(y\)-axis is different to that of \cref{fig:poynting non-relativistic radiation}, the maximum intensity of radiation is much higher here. A value of \(\beta = 0.5\) was used here.}
+        \label{fig:poynting relativistic radiation}
+    \end{figure}
+    \begin{figure}
+        \tikzsetnextfilename{poynting-relativistic-radiation-polar}
+        \begin{tikzpicture}
+            \draw[thick, ->] (-2, 0) -- (4, 0) node [below] {\(\diff{\vv{v}}/{t}\)};
+            \draw[thick, my orange, domain=0:360, samples=500] plot (\x:{0.6*sin(\x)*sin(\x)/((1-0.5*cos(\x))^6)});
+        \end{tikzpicture}
+        \caption[Polar plot of non-relativistic Poynting vector.]{This is the relativistic version of \cref{fig:poynting non-relativistic radiation polar}, see the caption of this figure for an explanation of how to read this plot. Note that the axis scales are not the same in these two figures, the maximum intensity of radiation is much higher here. A value of \(\beta = 0.5\) was used here.}
+        \label{fig:poynting relativistic radiation polar}
+    \end{figure}
+    
+    \backmatter
+%    \renewcommand{\glossaryname}{Acronyms}
+%    \printglossary[acronym]
+    \printindex
+\end{document}
